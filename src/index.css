@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bg-custom-blue{
+    background-color: #509CDB;
+}
+
+.bg-custom-blue-sidebar{
+    background-color: #152259;
+}
+
+.custom-icon-blue{
+    color: #13296A;
+}
+.custom-icon-blue-bg{
+    background-color: #EFF3FA;
+}
