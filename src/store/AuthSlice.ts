@@ -4,6 +4,7 @@ export interface AuthState {
   isAuthenticated: boolean;
   authCheckComplete: boolean;
   fetchingDone: boolean;
+  sessionExpired: boolean;
   admin: null;
 }
 const initialState: AuthState = {
@@ -11,6 +12,7 @@ const initialState: AuthState = {
   admin: null,
   authCheckComplete: false,
   fetchingDone: false,
+  sessionExpired: false,
 };
 const authSlice = createSlice({
   name: "auth",
@@ -26,6 +28,9 @@ const authSlice = createSlice({
 
     authCheckComplete: (state) => {
       state.authCheckComplete = true;
+    },
+    setSessionExpired: (state, action) => {
+      state.sessionExpired = action.payload;
     },
   },
 });
