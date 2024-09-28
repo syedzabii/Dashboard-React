@@ -1,12 +1,13 @@
 export interface Student {
-  _id: string;
+  _id?: string;
   studentName: string;
   age: number;
-  email: string;
+  gender: string;
   education: string;
-}
-
-export interface StudentContextType {
-  studentList: Student[];
-  addAllStudents: (students: Student[]) => void;
+  parentName: string;
+  country: string;
+  city: string;
+  email: string;
+  phoneNumber: string;
+  studentPhoto?: Record<string, never>;
 }
