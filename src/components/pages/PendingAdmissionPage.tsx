@@ -1,127 +1,187 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Eye } from "lucide-react";
 import StudentDetailModal from "../common/StudentDetailModal";
 import NavBar from "../common/NavBar";
 import apiClient from "../../services/api-client";
-import { FiRefreshCcw } from "react-icons/fi";
-
-// Define the Student type
-type Student = {
-  studentName: string;
-  age: number;
-  gender: string;
-  education: string;
-  parentName: string;
-  country: string;
-  city: string;
-  email: string;
-  phoneNumber: string;
-  studentPhoto: Record<string, never>;
-};
-
-// Sample data (3 student objects)
-const students: Student[] = [
-  {
-    studentName: "Syed",
-    age: 12,
-    gender: "Male",
-    education: "Master's Degree",
-    parentName: "Nasreen Begum",
-    country: "IN",
-    city: "Bangalore",
-    email: "syedismail@gmail.com",
-    phoneNumber: "919538202240",
-    studentPhoto: {},
-  },
-  {
-    studentName: "Jane Doe",
-    age: 14,
-    gender: "Female",
-    education: "High School",
-    parentName: "John Doe",
-    country: "US",
-    city: "New York",
-    email: "janedoe@example.com",
-    phoneNumber: "1234567890",
-    studentPhoto: {},
-  },
-  {
-    studentName: "Alex Smith",
-    age: 13,
-    gender: "Non-binary",
-    education: "Middle School",
-    parentName: "Sarah Smith",
-    country: "UK",
-    city: "London",
-    email: "alexsmith@example.com",
-    phoneNumber: "9876543210",
-    studentPhoto: {},
-  },
-];
+import PaginationShad from "../common/PaginationShad";
+import { Toaster } from "sonner";
+import { Student } from "@/interfaces/Student";
+import axios from "axios";
+import { giveToast } from "@/lib/utils";
+import { useDispatch } from "react-redux";
+import { authActions } from "@/store/AuthSlice";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMediaQuery } from "react-responsive";
 
 const PendingAdmissionPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [Refresh, setRefresh] = useState(Boolean);
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  const isMd = useMediaQuery({
+    minWidth: 768,
+  });
 
-  useEffect(() => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [students, setstudents] = useState<Student[]>([]);
+  const itemsPerPage = 5;
+
+  const handleAccept = async (student: Student) => {
+    try {
+      const res = await apiClient.post(
+        "/confirmedstudent/new",
+        { ...student },
+        { withCredentials: true }
+      );
+      giveToast(res.data.message, "✅");
+
+      await apiClient.delete(`/student/${student._id}`, {
+        withCredentials: true,
+      });
+      fetchStudent();
+      console.log("deleted after accepting");
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log(error.response.data, "kya hi");
+        giveToast(error.response.data.message, "❌");
+      } else {
+        giveToast("An unexpected error occurred", "❌");
+      }
+    }
+  };
+  const { mutate: acceptStudent, isError } = useMutation({
+    mutationFn: handleAccept,
+    onSuccess: () => {
+      console.log("onSuccess: invalidating & refetching");
+      queryClient.invalidateQueries({
+        queryKey: ["confirmedstudents"],
+      });
+      queryClient.refetchQueries({
+        queryKey: ["confirmedstudents"],
+      });
+    },
+  });
+
+  // const handleAccepta = (student: Student) => {
+  //   console.log("first acceept call");
+  //   apiClient
+  //     .post("/confirmedstudent/new", { ...student }, { withCredentials: true })
+  //     .then((res) => {
+  //       giveToast(res.data.message, "✅");
+  //       queryClient.invalidateQueries({
+  //         queryKey: ["confirmedstudents"],
+  //       });
+  //       apiClient
+  //         .delete(`/student/${student._id}`, {
+  //           withCredentials: true,
+  //         })
+  //         .then((res) => {
+  //           console.log("deleted after accepting");
+  //           fetchStudent();
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       if (axios.isAxiosError(error)) {
+  //         if (error.response) {
+  //           console.log(error.response.data, "kya hi");
+  //           giveToast(error.response.data.message, "❌");
+  //         } else {
+  //           giveToast("An error occurred", "❌");
+  //         }
+  //       } else {
+  //         giveToast("An unexpected error occurred", "❌");
+  //       }
+  //     });
+  // };
+
+  const handleReject = async (student: Student) => {
+    console.log("Rejected student:", student);
+    await apiClient.delete(`/student/${student._id}`, {
+      withCredentials: true,
+    });
+    giveToast(`Student deleted, Student Name: ${student.studentName}`, "⚠️");
+    fetchStudent();
+  };
+
+  const fetchStudent = useCallback(async () => {
+    console.log("fetcinguseffect pending");
     apiClient
-      .get("/student/paginStudents?page=1&itemsPerPage=1", {
+      .get(`/student/paginStudents?page=${currentPage}&limit=${itemsPerPage}`, {
         withCredentials: true,
       })
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err.response.data));
-  }, [Refresh]);
+      .then((res) => {
+        setTotalPages(res.data.totalPages);
+        setstudents(res.data.students);
+      })
+      .catch((error) => {
+        console.log(error, "kfl");
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 401) {
+            console.log("401401401");
+            dispatch(authActions.setSessionExpired(true));
+          }
+          if (error.response?.data.students.length === 0) {
+            setstudents([]);
+          }
+        }
+
+        // giveToast(error.response.data.message, "❌");
+      });
+  }, [currentPage]);
+
+  useEffect(() => {
+    fetchStudent();
+  }, [fetchStudent]);
 
   const handleView = (student: Student) => {
     setSelectedStudent(student);
     setIsModalOpen(true);
   };
 
-  const handleAccept = (student: Student) => {
-    console.log("Accepted student:", student);
-    // Implement your accept logic here
+  const onPageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
   };
-
-  const handleReject = (student: Student) => {
-    console.log("Rejected student:", student);
-    // Implement your reject logic here
-  };
-
   return (
-    <div className="w-full">
+    <div className="min-h-screen w-full mt-10">
       <NavBar />
-      <div className="container mx-auto p-6">
-        <button
-          className="flex gap-2 mb-3"
-          onClick={() => setRefresh((prev) => !prev)}
-        >
-          <FiRefreshCcw className="size-6 active:size-5 text-green-800" />
-        </button>
+      <div className="overflow-x-auto px-2 py-10">
+        <Toaster />
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-100">
-              <th className="py-2 px-4 border-b text-left">Name</th>
-              <th className="py-2 px-4 border-b text-left">Age</th>
-              <th className="py-2 px-4 border-b text-left">Gender</th>
-              <th className="py-2 px-4 border-b text-center">Action</th>
+              <th className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-left">
+                Name
+              </th>
+              <th className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-left">
+                Age
+              </th>
+              <th className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-left">
+                Gender
+              </th>
+              <th className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-center">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
             {students.map((student, index) => (
-              <tr
-                key={index}
-                className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
-              >
-                <td className="py-2 px-4 border-b">{student.studentName}</td>
-                <td className="py-2 px-4 border-b">{student.age}</td>
-                <td className="py-2 px-4 border-b">{student.gender}</td>
-                <td className="py-2 px-4 border-b text-center">
+              <tr key={index} className={"bg-white"}>
+                <td className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b">
+                  {student.studentName}
+                </td>
+                <td className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b">
+                  {student.age}
+                </td>
+                <td className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b">
+                  {student.gender}
+                </td>
+                <td className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-center">
                   <button
                     onClick={() => handleView(student)}
                     className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded inline-flex items-center"
                   >
-                    <Eye size={16} className="mr-1" />
+                    <Eye size={isMd ? 16 : 10} className="mr-1" />
                     View
                   </button>
                 </td>
@@ -133,8 +193,15 @@ const PendingAdmissionPage: React.FC = () => {
           isOpen={isModalOpen}
           closeModal={() => setIsModalOpen(false)}
           student={selectedStudent}
-          onAccept={handleAccept}
+          onAccept={acceptStudent}
           onReject={handleReject}
+        />
+      </div>
+      <div className="w-full">
+        <PaginationShad
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handlePageChange={onPageChange}
         />
       </div>
     </div>
