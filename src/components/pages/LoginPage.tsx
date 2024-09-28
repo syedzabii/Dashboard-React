@@ -6,6 +6,7 @@ import { ReduxState } from "../../store";
 import { Navigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
 import apiClient from "../../services/api-client";
+import { giveToast } from "@/lib/utils";
 
 const LoginPage = () => {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -32,16 +33,23 @@ const LoginPage = () => {
         );
 
         dispatch(authActions.setIsAuthenticated(true));
-        dispatch(authActions.setAdmin({ name: data.message }));
+        dispatch(authActions.setAdmin({ name: data.admin.name }));
         dispatch(authActions.authCheckComplete());
       }
     } catch (error: any) {
-      console.log(error);
-      toast(error.message, {
-        duration: 10000,
-        position: "top-left",
-        icon: <span>⚠️</span>,
-      });
+      // toast(error.response.data.message, {
+      //   duration: 10000,
+      //   position: "top-left",
+      //   icon: <span>⚠️</span>,
+      // });
+      console.log(error, "fdaf");
+      if (axios.isAxiosError(error)) {
+        if (!error.response?.data.message) {
+          console.log(error.message, "ifff");
+          giveToast(error.message, "⚠️");
+        }
+      }
+      giveToast(error.response.data.message, "❌");
       dispatch(authActions.setIsAuthenticated(false));
       dispatch(authActions.authCheckComplete());
     }
@@ -50,10 +58,10 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50">
-      <h1 className="mb-12 text-2xl font-semibold">
+      <h1 className="mb-12 text-center   sm:text-2xl font-semibold">
         Welcome to Admin Page, Log into your account
       </h1>
-      <Toaster />;
+      <Toaster />
       <form
         onSubmit={submitHandler}
         className="w-full max-w-xl flex flex-col items-center gap-4 bg-white pt-16 pb-16"
@@ -63,7 +71,7 @@ const LoginPage = () => {
           placeholder="Enter your email here"
           ref={emailRef}
           required
-          className=" border-y-2 border-t-0 w-1/2 pb-2 focus:outline-none  focus:border-blue-600 text-slate-700"
+          className="text-sm  border-y-2 border-t-0 w-1/2 pb-2 focus:outline-none  focus:border-blue-600 text-slate-700"
         />
 
         <input
@@ -71,10 +79,10 @@ const LoginPage = () => {
           ref={passwordRef}
           required
           placeholder="Enter your password here"
-          className="border-y-2 border-t-0 w-1/2 pb-2 focus:outline-none focus:border-blue-600"
+          className="text-sm border-y-2 border-t-0 w-1/2 pb-2 focus:outline-none focus:border-blue-600"
         />
 
-        <button className="bg-blue-600 w-1/2 p-2 rounded-md text-white active:bg-blue-500">
+        <button className="text-sm sm:text-base bg-blue-600 w-1/2 p-2 rounded-md text-white active:bg-blue-500">
           Login as Admin
         </button>
         <p className="text-xs text-gray-400">
