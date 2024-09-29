@@ -8,9 +8,9 @@ import MainLayout from "../MainLayout";
 import apiClient from "../../services/api-client";
 
 const ProtectedRoute = () => {
-  console.log("first");
+  console.log("PROTETECTED ROUTUTTTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEEE");
   const dispatch = useDispatch();
-  const { isAuthenticated, authCheckComplete } = useSelector(
+  const { isAuthenticated, authCheckComplete, sessionExpired } = useSelector(
     (state: ReduxState) => state.auth
   );
 
@@ -38,6 +38,10 @@ const ProtectedRoute = () => {
     return <p>Loading.....</p>;
   }
   if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+  if (sessionExpired) {
+    return <Navigate to="/expired-page" replace />;
+  }
   return <Outlet />;
 };
 
