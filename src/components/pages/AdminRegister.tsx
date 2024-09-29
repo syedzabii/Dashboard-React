@@ -42,6 +42,11 @@ const AdminRegister = () => {
         passwordRef.current.value = "";
       }
     } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        if (error.status === 401) {
+          console.log("401401401");
+        }
+      }
       toast(error.response.data.message, {
         duration: 10000,
         position: "top-left",
@@ -54,13 +59,13 @@ const AdminRegister = () => {
     <div className="w-full">
       <NavBar />
       <div className="min-h-screen -mt-8 flex flex-col justify-center items-center bg-gray-50">
-        <h1 className="mb-12 text-2xl font-semibold">Admin Registration</h1>
+        <h1 className="mb-12 md:text-2xl font-semibold">Admin Registration</h1>
         <Toaster />;
         <form
           onSubmit={submitHandler}
           className="w-full max-w-xl flex flex-col items-center gap-4 bg-white pt-16 pb-16"
         >
-          <h1 className="text-slate-600 mb-6">
+          <h1 className="text-sm md:text-base text-slate-600 mb-6">
             It is our great pleasure to have you on board!
           </h1>
           <input
@@ -68,7 +73,7 @@ const AdminRegister = () => {
             placeholder="Enter your name"
             ref={nameRef}
             required
-            className=" border-y-2 border-t-0 w-1/2 pb-2 focus:outline-none  focus:border-blue-600 text-slate-700"
+            className="text-xs md:text-base border-y-2 border-t-0 w-2/3 md:w-1/2 pb-2 focus:outline-none  focus:border-blue-600 text-slate-700"
           />
 
           <input
@@ -76,7 +81,7 @@ const AdminRegister = () => {
             placeholder="Enter your email here"
             ref={emailRef}
             required
-            className=" border-y-2 border-t-0 w-1/2 pb-2 focus:outline-none  focus:border-blue-600 text-slate-700"
+            className="text-xs md:text-base border-y-2 border-t-0  w-2/3 md:w-1/2 pb-2 focus:outline-none  focus:border-blue-600 text-slate-700"
           />
 
           <input
@@ -84,10 +89,10 @@ const AdminRegister = () => {
             ref={passwordRef}
             required
             placeholder="Set your password here"
-            className="border-y-2 border-t-0 w-1/2 pb-2 focus:outline-none focus:border-blue-600"
+            className="text-xs md:text-base border-y-2 border-t-0  w-2/3 md:w-1/2 pb-2 focus:outline-none focus:border-blue-600"
           />
 
-          <button className="bg-blue-600 w-1/2 p-2 rounded-md text-white active:bg-blue-500">
+          <button className="text-xs md:text-base bg-blue-600  w-2/3 md:w-1/2 p-2 rounded-md text-white active:bg-blue-500">
             Register
           </button>
         </form>

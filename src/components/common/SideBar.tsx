@@ -6,15 +6,14 @@ import { MdOutlineSettings } from "react-icons/md";
 import { PiExam } from "react-icons/pi";
 import { GiTeacher } from "react-icons/gi";
 import { FaCheckDouble } from "react-icons/fa";
+import ambuloom from "../../assets/image.png";
 import { NavLink } from "react-router-dom";
 
 const SideBar = () => {
   return (
-    <div className="sidebar min-h-screen w-full max-w-64 flex flex-col items-center  bg-custom-blue-sidebar pt-5">
-      <img src={Ellipse} alt="" />
-      <h1 className="mt-4 font-semibold text-white mb-12">
-        Udemy Inter. School
-      </h1>
+    <div className="hidden md:flex sidebar min-h-screen w-full max-w-64  flex-col items-center  bg-custom-blue-sidebar pt-5">
+      <img src={ambuloom} alt="" className="rounded-full h-20 w-20 " />
+      <h1 className="mt-4 font-semibold text-white mb-12">AMBAA UL ULOOM</h1>
       <div className="w-full border-b border-gray-300"></div>
       <div className="sidebar-links flex flex-col w-full p-4 min-h-52  items-center">
         {/* Dashboard */}

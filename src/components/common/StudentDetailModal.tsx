@@ -1,17 +1,6 @@
+import { Student } from "@/interfaces/Student";
 import { Dialog, Transition } from "@headlessui/react";
 import React from "react";
-type Student = {
-  studentName: string;
-  age: number;
-  gender: string;
-  education: string;
-  parentName: string;
-  country: string;
-  city: string;
-  email: string;
-  phoneNumber: string;
-  studentPhoto: Record<string, never>;
-};
 
 // Sample data (3 student objects)
 
