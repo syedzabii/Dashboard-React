@@ -7,21 +7,20 @@ import Profile from "./Profile";
 
 const NavBar = () => {
   const dispatch = useDispatch();
+
   const handleLogout = () => {
-    console.log("logoutut");
     axios
       .get("http://localhost:8000/api/v1/admin/logout", {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res.data);
         dispatch(authActions.setIsAuthenticated(false));
         dispatch(authActions.setAdmin({}));
       })
       .catch((error) => console.log(error.response.data));
   };
   return (
-    <div className="w-full flex h-24 bg-white justify-between items-center px-7 mb-7">
+    <div className="hidden md:flex w-full  h-24 bg-white justify-between items-center px-7 mb-7">
       <div className="flex gap-3 items-center">
         <PiUserCircleCheckLight className="size-9 text-green-500" />
         <Profile />
