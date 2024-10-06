@@ -1,4 +1,4 @@
-For onboarding students to your madrassa, it's important to balance ease of use with proper verification and management. Here’s a structured idea:
+For onboarding students.
 
 ### **1. Multi-Step Onboarding Process**
 
@@ -26,7 +26,7 @@ Instead of a simple form, you can implement a more secure and detailed onboardin
 
 #### **Step 5: Payment and Document Submission (Optional)**
 
-- If your madrassa requires fees, introduce a **payment gateway** for tuition. You can integrate services like Stripe or PayPal.
+- If madrassa requires fees, introduce a **payment gateway** for tuition. You can integrate services like Stripe or PayPal.
 - If there are additional documents (proof of education, health records), you can request those at this stage.
 
 #### **Step 6: Welcome and Onboarding**
@@ -46,7 +46,3 @@ Instead of a simple form, you can implement a more secure and detailed onboardin
 ### **4. Batch Enrolment Quotas**
 
 - To prevent overcrowding in classes, set a **maximum quota** for each batch. Once a batch is full, students are placed on a waiting list or auto-assigned to the next available batch.
-
-This approach not only adds professionalism to the onboarding process but also gives you control over verifying student authenticity while efficiently managing the number of enrollments per class.
-
-Does this approach resonate with your vision?
