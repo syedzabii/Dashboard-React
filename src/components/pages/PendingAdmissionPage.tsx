@@ -26,6 +26,7 @@ const PendingAdmissionPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [students, setstudents] = useState<Student[]>([]);
+  const [isLoading, setisLoading] = useState(true);
   const itemsPerPage = 5;
 
   const handleAccept = async (student: Student) => {
@@ -128,6 +129,9 @@ const PendingAdmissionPage: React.FC = () => {
         }
 
         // giveToast(error.response.data.message, "❌");
+      })
+      .finally(() => {
+        setisLoading(false);
       });
   }, [currentPage]);
 
@@ -143,6 +147,8 @@ const PendingAdmissionPage: React.FC = () => {
   const onPageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
+
+  if (isLoading) return <p>Loading....</p>;
   return (
     <div className="min-h-screen w-full mt-10">
       <NavBar />
