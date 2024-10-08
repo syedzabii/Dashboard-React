@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { authActions } from "@/store/AuthSlice";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMediaQuery } from "react-responsive";
+import Message from "../common/Message";
 
 const PendingAdmissionPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -100,7 +101,7 @@ const PendingAdmissionPage: React.FC = () => {
     await apiClient.delete(`/student/${student._id}`, {
       withCredentials: true,
     });
-    giveToast(`Student deleted, Student Name: ${student.studentName}`, "⚠️");
+    giveToast(`Student deleted ${student.studentName}`, "⚠️");
     fetchStudent();
   };
 
@@ -147,48 +148,55 @@ const PendingAdmissionPage: React.FC = () => {
       <NavBar />
       <div className="overflow-x-auto px-2 py-10">
         <Toaster />
-        <table className="min-w-full bg-white border border-gray-300">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-left">
-                Name
-              </th>
-              <th className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-left">
-                Age
-              </th>
-              <th className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-left">
-                Gender
-              </th>
-              <th className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-center">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map((student, index) => (
-              <tr key={index} className={"bg-white"}>
-                <td className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b">
-                  {student.studentName}
-                </td>
-                <td className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b">
-                  {student.age}
-                </td>
-                <td className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b">
-                  {student.gender}
-                </td>
-                <td className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-center">
-                  <button
-                    onClick={() => handleView(student)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded inline-flex items-center"
-                  >
-                    <Eye size={isMd ? 16 : 10} className="mr-1" />
-                    View
-                  </button>
-                </td>
+        {students.length === 0 ? (
+          <div className="text-center">
+            <Message message="There are no pending admission as of now..." />
+          </div>
+        ) : (
+          <table className="min-w-full bg-white border border-gray-300">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-left">
+                  Name
+                </th>
+                <th className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-left">
+                  Age
+                </th>
+                <th className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-left">
+                  Gender
+                </th>
+                <th className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-center">
+                  Action
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {students.map((student, index) => (
+                <tr key={index} className={"bg-white"}>
+                  <td className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b">
+                    {student.studentName}
+                  </td>
+                  <td className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b">
+                    {student.age}
+                  </td>
+                  <td className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b">
+                    {student.gender}
+                  </td>
+                  <td className="py-2 px-2 sm:px-4 text-xs sm:text-base border-b text-center">
+                    <button
+                      onClick={() => handleView(student)}
+                      className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded inline-flex items-center"
+                    >
+                      <Eye size={isMd ? 16 : 10} className="mr-1" />
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
         <StudentDetailModal
           isOpen={isModalOpen}
           closeModal={() => setIsModalOpen(false)}
@@ -198,11 +206,13 @@ const PendingAdmissionPage: React.FC = () => {
         />
       </div>
       <div className="w-full">
-        <PaginationShad
-          currentPage={currentPage}
-          totalPages={totalPages}
-          handlePageChange={onPageChange}
-        />
+        {!(students.length === 0) && (
+          <PaginationShad
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePageChange={onPageChange}
+          />
+        )}
       </div>
     </div>
   );
