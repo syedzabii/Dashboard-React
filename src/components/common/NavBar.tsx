@@ -1,18 +1,16 @@
-import axios from "axios";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { PiUserCircleCheckLight } from "react-icons/pi";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../store/AuthSlice";
 import Profile from "./Profile";
+import apiClient from "@/services/api-client";
 
 const NavBar = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    axios
-      .get("http://localhost:8000/api/v1/admin/logout", {
-        withCredentials: true,
-      })
+    apiClient
+      .get("/admin/logout", { withCredentials: true })
       .then((res) => {
         dispatch(authActions.setIsAuthenticated(false));
         dispatch(authActions.setAdmin({}));

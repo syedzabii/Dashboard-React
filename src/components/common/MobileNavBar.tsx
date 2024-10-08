@@ -11,6 +11,7 @@ import { NavLink } from "react-router-dom";
 import { authActions } from "@/store/AuthSlice";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import apiClient from "@/services/api-client";
 
 const MobileNavBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,10 +22,8 @@ const MobileNavBar: React.FC = () => {
   };
 
   const handleLogout = () => {
-    axios
-      .get("http://localhost:8000/api/v1/admin/logout", {
-        withCredentials: true,
-      })
+    apiClient
+      .get("/admin/logout", { withCredentials: true })
       .then((res) => {
         dispatch(authActions.setIsAuthenticated(false));
         dispatch(authActions.setAdmin({}));
