@@ -19,7 +19,7 @@ const DashboardPage = () => {
           <div className="flex gap-4  p-2 mb-4">
             <IoMdPersonAdd className="size-8 custom-icon-blue-bg custom-icon-blue rounded p-1 cursor-pointer" />
             <div className="box w-2/3">
-              <h1 className="text-slate-700 md:text-xl mb-3 font-semibold cursor-pointer hover:text-slate-600 active:text-blue-500">
+              <h1 className="text-slate-700 md:text-xl mb-3 font-semibold cursor-pointer hover:text-green-600 active:text-blue-500">
                 <Link to={"admin-register"}>Add Admin</Link>
               </h1>
               <p className="text-xs md:text-sm text-slate-700">
