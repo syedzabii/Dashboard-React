@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRef } from "react";
 import { toast, Toaster } from "sonner";
 import NavBar from "../common/NavBar";
+import apiClient from "@/services/api-client";
 
 const AdminRegister = () => {
   const nameRef = useRef<HTMLInputElement>(null);
@@ -21,8 +22,8 @@ const AdminRegister = () => {
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
 
-        const { data } = await axios.post(
-          "http://localhost:8000/api/v1/admin/new",
+        const { data } = await apiClient.post(
+          "/admin/new",
           {
             name,
             email,
@@ -33,7 +34,7 @@ const AdminRegister = () => {
           }
         );
         toast(data.message, {
-          duration: 10000,
+          duration: 7000,
           position: "top-left",
           icon: <span>✅</span>,
         });
@@ -48,7 +49,7 @@ const AdminRegister = () => {
         }
       }
       toast(error.response.data.message, {
-        duration: 10000,
+        duration: 7000,
         position: "top-left",
         icon: <span>⚠️</span>,
       });
