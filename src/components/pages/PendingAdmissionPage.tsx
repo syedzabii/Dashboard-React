@@ -148,7 +148,7 @@ const PendingAdmissionPage: React.FC = () => {
     setCurrentPage(pageNumber);
   };
 
-  if (isLoading) return <p>Loading....</p>;
+  if (isLoading) return <p>checking for new admissions....</p>;
   return (
     <div className="min-h-screen w-full mt-10">
       <NavBar />
