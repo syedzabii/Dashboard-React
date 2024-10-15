@@ -12,7 +12,7 @@ const DashboardPage = () => {
       {/* Dashboard menu */}
       <div className="flex flex-col items-center">
         <h1 className="md:text-4xl text-center text-slate-700 font-bold mb-20">
-          Welcome to your dashboard, Udemy school
+          Welcome to your dashboard
         </h1>
         <div className="dashboard-menu w-full max-w-3xl p-4 ">
           {/* Add Admin */}
