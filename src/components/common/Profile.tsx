@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { ReduxState } from "../../store";
 import TimeOfDay from "./TimeoFDay";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const Profile = () => {
   const admin: any = useSelector((state: ReduxState) => state.auth.admin);
@@ -17,12 +18,25 @@ const Profile = () => {
       return "Night";
     }
   };
+  const getTheInitials = (name: string) => {
+    return name.slice(0, 2).toUpperCase();
+  };
   return (
     <>
-      <h5 className="text-xs">
-        Hi<span className="uppercase ml-1 font-mono">{admin.name},</span>
-        {` Good ${getTimeOfDay()}`}
-      </h5>
+      <div className="flex items-center space-x-4">
+        <Avatar>
+          <AvatarImage
+            src={`https://api.dicebear.com/9.x/initials/svg?seed=${admin.name}&backgroundType=gradientLinear&backgroundColor=7cb342,43a047`}
+            alt={admin.name}
+          />
+          <AvatarFallback className="font font-semibold">
+            {getTheInitials(admin.name)}
+          </AvatarFallback>
+        </Avatar>
+        <span className="text-black text-md">
+          Hi, {admin.name}, Good {getTimeOfDay()}
+        </span>
+      </div>
     </>
   );
 };
