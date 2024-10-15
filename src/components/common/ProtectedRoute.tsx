@@ -35,7 +35,12 @@ const ProtectedRoute = () => {
 
   if (!authCheckComplete) {
     console.log("second");
-    return <p>Loading.....</p>;
+    return (
+      <p>
+        Intial loading may take upto 2 mins.... because backend is hosted on
+        free plan 🆓{" "}
+      </p>
+    );
   }
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
