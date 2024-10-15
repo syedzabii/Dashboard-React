@@ -36,9 +36,9 @@ const ProtectedRoute = () => {
   if (!authCheckComplete) {
     console.log("second");
     return (
-      <p>
-        Intial loading may take upto 2 mins.... because backend is hosted on
-        free plan 🆓{" "}
+      <p className="text-center mt-40">
+        Intial loading may take more than 50 seconds .... because backend is
+        hosted on free plan 🆓🙏.....
       </p>
     );
   }
