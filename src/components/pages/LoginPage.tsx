@@ -59,8 +59,9 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50">
       <h1 className="mb-12 text-center   sm:text-2xl font-semibold">
-        Welcome to Admin Page, Log into your account
+        Welcome to Admin Page, Log into your account,
       </h1>
+      <h1 className="text-sm">Email: admin@gmail.com, pass: password</h1>
       <Toaster />
       <form
         onSubmit={submitHandler}
@@ -68,7 +69,7 @@ const LoginPage = () => {
       >
         <input
           type="email"
-          placeholder="Enter your email here"
+          placeholder="Enter admin@gmail.com here"
           ref={emailRef}
           required
           className="text-sm  border-y-2 border-t-0 w-1/2 pb-2 focus:outline-none  focus:border-blue-600 text-slate-700"
@@ -78,7 +79,7 @@ const LoginPage = () => {
           type="password"
           ref={passwordRef}
           required
-          placeholder="Enter your password here"
+          placeholder="Enter password as password"
           className="text-sm border-y-2 border-t-0 w-1/2 pb-2 focus:outline-none focus:border-blue-600"
         />
 
