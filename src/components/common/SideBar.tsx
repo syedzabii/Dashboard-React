@@ -13,7 +13,7 @@ const SideBar = () => {
   return (
     <div className="hidden md:flex sidebar min-h-screen w-full max-w-64  flex-col items-center  bg-custom-blue-sidebar pt-5">
       <img src={ambuloom} alt="" className="rounded-full h-20 w-20 " />
-      <h1 className="mt-4 font-semibold text-white mb-12">AMBAA UL ULOOM</h1>
+      <h1 className="mt-4 font-semibold text-white mb-12">My Own School</h1>
       <div className="w-full border-b border-gray-300"></div>
       <div className="sidebar-links flex flex-col w-full p-4 min-h-52  items-center">
         {/* Dashboard */}
