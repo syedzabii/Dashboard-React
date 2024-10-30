@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { authActions, AuthState } from "../../store/AuthSlice";
+import { authActions } from "../../store/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ReduxState } from "../../store";
-import axios from "axios";
-import MainLayout from "../MainLayout";
 import apiClient from "../../services/api-client";
+import LoadingMessage from "./LoadingMessage";
 
 const ProtectedRoute = () => {
-  console.log("PROTETECTED ROUTUTTTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEEE");
   const dispatch = useDispatch();
   const { isAuthenticated, authCheckComplete, sessionExpired } = useSelector(
     (state: ReduxState) => state.auth
@@ -23,10 +21,10 @@ const ProtectedRoute = () => {
         .then((res) => {
           dispatch(authActions.setIsAuthenticated(true));
           dispatch(authActions.setAdmin({ name: res.data.admin.name }));
-          console.log("fifth,success", res.data);
+          // console.log("fifth,success", res.data);
         })
         .catch((error) => {
-          console.log("fifth,error", error.response.data);
+          // console.log("fifth,error", error.response.data);
           dispatch(authActions.setIsAuthenticated(false));
         })
         .finally(() => dispatch(authActions.authCheckComplete()));
@@ -34,13 +32,7 @@ const ProtectedRoute = () => {
   }, []);
 
   if (!authCheckComplete) {
-    console.log("second");
-    return (
-      <p className="text-center mt-40">
-        Intial loading may take more than 50 seconds .... because backend is
-        hosted on free plan 🆓🙏.....
-      </p>
-    );
+    return <LoadingMessage />;
   }
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
